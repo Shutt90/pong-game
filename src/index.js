@@ -1,8 +1,5 @@
 import Phaser from "phaser";
 
-let ball;
-let playerPaddle;
-let enemyPaddle;
 let playerCurrentScore = 0;
 let enemyCurrentScore = 0;
 
@@ -16,65 +13,88 @@ class MyGame extends Phaser.Scene {
     this.load.image("paddle", "./src/assets/paddle.png");
   }
   create() {
-    var scoreText1;
-    scoreText1 = this.add.text(16, 16, "score: " + playerCurrentScore, {
+    this.scoreText1 = this.add.text(16, 16, "score: " + playerCurrentScore, {
       fontSize: "32px",
       fill: "#fff",
     });
-    var scoreText2;
-    scoreText2 = this.add.text(500, 16, "score: " + enemyCurrentScore, {
+    this.scoreText2 = this.add.text(500, 16, "score: " + enemyCurrentScore, {
       fontSize: "32px",
       fill: "#fff",
     });
-    ball = this.physics.add.sprite(400, 300, "ball");
-    playerPaddle = this.physics.add.sprite(55, 300, "paddle");
-    enemyPaddle = this.physics.add.sprite(745, 300, "paddle");
-    ball.setCollideWorldBounds(true);
-    ball.setBounce(1.1, 1.1);
-    ball.body.allowRotation = true;
-    ball.body.velocity.set(400, this.rand);
+    this.ball = this.physics.add.sprite(400, 300, "ball");
+    this.playerPaddle = this.physics.add.sprite(55, 300, "paddle");
+    this.enemyPaddle = this.physics.add.sprite(745, 300, "paddle");
+    this.ball.setCollideWorldBounds(true);
+    this.ball.setBounce(1.1, 1.1);
+    this.ball.body.allowRotation = true;
+    this.ball.body.velocity.set(400, this.rand);
     this.playerScore = () => playerCurrentScore++;
     this.enemyScore = () => enemyCurrentScore++;
-    playerPaddle.setCollideWorldBounds(true);
-    enemyPaddle.setCollideWorldBounds(true);
-    playerPaddle.setImmovable();
-    enemyPaddle.setImmovable();
-    this.keys = this.input.keyboard.addKeys("W,S,I,K");
-    ball.setCircle(17);
-    ball.body.setAngularVelocity(250);
+    this.playerPaddle.setCollideWorldBounds(true);
+    this.enemyPaddle.setCollideWorldBounds(true);
+    this.playerPaddle.setImmovable();
+    this.enemyPaddle.setImmovable();
+    this.keys = this.input.keyboard.addKeys("W,S,A,D,I,J,L,K");
+    this.ball.setCircle(17);
+    this.ball.body.setAngularVelocity(250);
+    this.resumeGame = function () {
+      this.pauseText = this.add.text(250, 200, "NEW GAME", {
+        fontSize: "64px",
+        fill: "#fff",
+      });
+    };
 
     this.reset = function () {
-      if (ball.body.x < playerPaddle.body.x - 10) {
+      if (this.ball.body.x < this.playerPaddle.body.x - 10) {
         enemyCurrentScore++;
         this.scene.restart();
-      } else if (ball.body.x > enemyPaddle.body.x + 10) {
-        playerCurrentScore++;
+        this.scene.pause();
 
+        // this.time.delayedCall(
+        //   1000,
+        //   function () {
+        //     return this.scene.resume;
+        //   },
+        //   [],
+        //   this
+        // );
+        // setInterval(function () {
+        //   console.log(this);
+        // }, 3000);
+      } else if (this.ball.body.x > this.enemyPaddle.body.x + 10) {
+        playerCurrentScore++;
         this.scene.restart();
+        this.scene.pause();
+        // this.time.delayedCall(3000, this.scene.resume, [], this);
+
+        // setInterval(function () {
+        //   this.scene.resume();
+        // }, 3000);
       }
     };
   }
 
   update() {
-    this.physics.add.collider(ball, playerPaddle, null, null, this);
-    this.physics.add.collider(ball, enemyPaddle, null, null, this);
     this.rand = Math.floor(Math.random() * 360);
 
-    playerPaddle.setVelocity(0);
-    if (this.keys.W.isDown) {
-      playerPaddle.setVelocityY(-400);
-    } else if (this.keys.S.isDown) {
-      playerPaddle.setVelocityY(400);
-    }
     this.reset();
 
-    enemyPaddle.setVelocity(0);
-    if (this.keys.I.isDown) {
-      enemyPaddle.setVelocityY(-400);
-    } else if (this.keys.K.isDown) {
-      enemyPaddle.setVelocityY(400);
+    this.playerPaddle.setVelocity(0);
+    if (this.keys.W.isDown) {
+      this.playerPaddle.setVelocityY(-400);
+    } else if (this.keys.S.isDown) {
+      this.playerPaddle.setVelocityY(400);
     }
-    this.reset();
+
+    this.enemyPaddle.setVelocity(0);
+    if (this.keys.I.isDown) {
+      this.enemyPaddle.setVelocityY(-400);
+    } else if (this.keys.K.isDown) {
+      this.enemyPaddle.setVelocityY(400);
+    }
+
+    this.physics.add.collider(this.ball, this.playerPaddle, null, null, this);
+    this.physics.add.collider(this.ball, this.enemyPaddle, null, null, this);
   }
 }
 
@@ -87,7 +107,7 @@ const config = {
   physics: {
     default: "arcade",
     arcade: {
-      debug: true,
+      debug: false,
     },
   },
 };
