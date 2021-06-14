@@ -29,10 +29,10 @@ class MyGame extends Phaser.Scene {
     ball = this.physics.add.sprite(400, 300, "ball");
     playerPaddle = this.physics.add.sprite(55, 300, "paddle");
     enemyPaddle = this.physics.add.sprite(745, 300, "paddle");
-    const pause = (this.time.pause = true);
-    ball.setBounce(1);
     ball.setCollideWorldBounds(true);
-    ball.body.velocity.set(250);
+    ball.setBounce(1.1, 1.1);
+    ball.body.allowRotation = true;
+    ball.body.velocity.set(400, this.rand);
     this.playerScore = () => playerCurrentScore++;
     this.enemyScore = () => enemyCurrentScore++;
     playerPaddle.setCollideWorldBounds(true);
@@ -40,7 +40,6 @@ class MyGame extends Phaser.Scene {
     playerPaddle.setImmovable();
     enemyPaddle.setImmovable();
     this.keys = this.input.keyboard.addKeys("W,S,I,K");
-    console.log(ball);
     ball.setCircle(17);
     ball.body.setAngularVelocity(250);
 
@@ -48,15 +47,9 @@ class MyGame extends Phaser.Scene {
       if (ball.body.x < playerPaddle.body.x - 10) {
         enemyCurrentScore++;
         this.scene.restart();
-      }
-    };
-
-    this.reset = function () {
-      if (ball.body.x < playerPaddle.body.x - 10) {
-        enemyCurrentScore++;
-        this.scene.restart();
       } else if (ball.body.x > enemyPaddle.body.x + 10) {
         playerCurrentScore++;
+
         this.scene.restart();
       }
     };
@@ -65,20 +58,21 @@ class MyGame extends Phaser.Scene {
   update() {
     this.physics.add.collider(ball, playerPaddle, null, null, this);
     this.physics.add.collider(ball, enemyPaddle, null, null, this);
+    this.rand = Math.floor(Math.random() * 360);
 
     playerPaddle.setVelocity(0);
     if (this.keys.W.isDown) {
-      playerPaddle.setVelocityY(-350);
+      playerPaddle.setVelocityY(-400);
     } else if (this.keys.S.isDown) {
-      playerPaddle.setVelocityY(350);
+      playerPaddle.setVelocityY(400);
     }
     this.reset();
 
     enemyPaddle.setVelocity(0);
     if (this.keys.I.isDown) {
-      enemyPaddle.setVelocityY(-350);
+      enemyPaddle.setVelocityY(-400);
     } else if (this.keys.K.isDown) {
-      enemyPaddle.setVelocityY(350);
+      enemyPaddle.setVelocityY(400);
     }
     this.reset();
   }
@@ -93,7 +87,6 @@ const config = {
   physics: {
     default: "arcade",
     arcade: {
-      velocity: { x: 1500 },
       debug: true,
     },
   },
