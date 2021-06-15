@@ -34,14 +34,25 @@ class MyGame extends Phaser.Scene {
     );
     this.background.setScale(0.2);
     this.arr = [-300, 300];
-    this.scoreText1 = this.add.text(200, 300, playerCurrentScore, {
-      fontSize: "64px",
-      fill: "#00af7d",
-    });
-    this.scoreText2 = this.add.text(550, 300, enemyCurrentScore, {
-      fontSize: "64px",
-      fill: "#feb700",
-    });
+
+    this.scoreText1 = this.add.text(
+      this.startPositionBall.x / 2 - this.fontSize / 2,
+      this.startPositionBall.y - this.fontSize / 2,
+      playerCurrentScore,
+      {
+        fontSize: this.fontSize + "px",
+        fill: "#00af7d",
+      }
+    );
+    this.scoreText2 = this.add.text(
+      this.startPositionBall.x * 1.5 - this.fontSize / 2,
+      this.startPositionBall.y - this.fontSize / 2,
+      enemyCurrentScore,
+      {
+        fontSize: this.fontSize + "px",
+        fill: "#feb700",
+      }
+    );
     this.ball = this.physics.add.sprite(
       this.startPositionBall.x,
       this.startPositionBall.y,
@@ -58,6 +69,8 @@ class MyGame extends Phaser.Scene {
       this.startEnemyPaddle.y,
       "paddle"
     );
+
+    this.fontSize = 64;
 
     this.ball
       .setCollideWorldBounds(true)
@@ -85,17 +98,22 @@ class MyGame extends Phaser.Scene {
       this.scene.resume();
     };
     this.resumeGame = function () {
-      this.pauseText = this.add.text(250, 200, "NEW GAME", {
-        fontSize: "64px",
-        fill: "#fff",
-      });
+      this.pauseText = this.add.text(
+        this.startPositionBall.x - this.fontSize / 2,
+        this.startPositionBall.y - this.fontSize / 2,
+        "NEW GAME",
+        {
+          fontSize: "64px",
+          fill: "#fff",
+        }
+      );
     };
 
     this.reset = function () {
       if (this.ball.body.x < this.playerPaddle.body.x - 25) {
         enemyCurrentScore++;
         this.scene.restart();
-        this.scene.pause();
+        // this.scene.pause();
         // this.time.(4000, this.resumeGame(), [], this)
 
         // this.time.delayedCall(
@@ -112,7 +130,7 @@ class MyGame extends Phaser.Scene {
       } else if (this.ball.body.x > this.enemyPaddle.body.x + 25) {
         playerCurrentScore++;
         this.scene.restart();
-        this.scene.pause();
+        // this.scene.pause();
         // this.resumeGame();
 
         // this.time.delayedCall(3000, this.timer(), [], this);
