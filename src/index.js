@@ -44,6 +44,7 @@ class MyGame extends Phaser.Scene {
         fill: "#00af7d",
       }
     );
+
     this.scoreText2 = this.add.text(
       this.startPositionBall.x * 1.5 - this.fontSize / 2,
       this.startPositionBall.y - this.fontSize / 2,
@@ -88,7 +89,6 @@ class MyGame extends Phaser.Scene {
 
     this.playerPaddle.setCollideWorldBounds(true).setImmovable();
     this.enemyPaddle.setCollideWorldBounds(true).setImmovable();
-
     this.physics.add.collider(this.ball, this.playerPaddle, null, null, this);
     this.physics.add.collider(this.ball, this.enemyPaddle, null, null, this);
 
@@ -113,31 +113,19 @@ class MyGame extends Phaser.Scene {
       if (this.ball.body.x < this.playerPaddle.body.x - 25) {
         enemyCurrentScore++;
         this.scene.restart();
-        // this.scene.pause();
-        // this.time.(4000, this.resumeGame(), [], this)
+        this.resumeGame();
 
-        // this.time.delayedCall(
-        //   3000,
-        //   function () {
-        //     return this.scene.resume;
-        //   },
-        //   [],
-        //   this
-        // );
-        // setInterval(function () {
-        //   this.scene.resume;
-        // }, 3000);
+        this.scene.pause();
+        setTimeout(() => {
+          this.scene.restart();
+        }, 3000);
       } else if (this.ball.body.x > this.enemyPaddle.body.x + 25) {
         playerCurrentScore++;
         this.scene.restart();
-        // this.scene.pause();
-        // this.resumeGame();
-
-        // this.time.delayedCall(3000, this.timer(), [], this);
-
-        // setInterval(function () {
-        //   this.scene.resume();
-        // }, 3000);
+        this.scene.pause();
+        setTimeout(() => {
+          this.scene.restart();
+        }, 3000);
       }
     };
   }
@@ -171,7 +159,7 @@ const config = {
   physics: {
     default: "arcade",
     arcade: {
-      debug: true,
+      debug: false,
     },
   },
 };
