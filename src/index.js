@@ -12,6 +12,9 @@ class MyGame extends Phaser.Scene {
     this.load.image("ball", "./src/assets/ball2.png");
     this.load.image("paddle", "./src/assets/laser.png");
     this.load.image("background", "./src/assets/background.jpg");
+    this.load.audio("score", "./src/assets/sounds/scoreup.wav");
+    this.load.audio("win", "./src/assets/sounds/winner.wav");
+    this.load.audio("lose", "./src/assets/sounds/loser.wav");
 
     this.startPositionBall = { x: 400, y: 300 };
 
@@ -71,8 +74,9 @@ class MyGame extends Phaser.Scene {
       "paddle"
     );
 
-    console.log(this.startEnemyPaddle.x);
-    console.log(this.startEnemyPaddle.y);
+    this.scoreSnd = this.sound.add("score");
+    this.winSnd = this.sound.add("win");
+    this.loseSnd = this.sound.add("lose");
 
     this.fontSize = 64;
 
@@ -98,8 +102,13 @@ class MyGame extends Phaser.Scene {
     this.keys = this.input.keyboard.addKeys("W,S,I,J");
 
     this.ai = function () {
-      if (this.ball.x > this.startPositionBall.y) {
-        this.physics.moveTo(this.enemyPaddle, 745, this.ball.y, 350);
+      if (this.ball.x > this.startPositionBall.x) {
+        this.physics.moveTo(
+          this.enemyPaddle,
+          this.startEnemyPaddle.x,
+          this.ball.y,
+          350
+        );
       }
     };
 
@@ -120,6 +129,9 @@ class MyGame extends Phaser.Scene {
 
     this.reset = function () {
       if (this.ball.x < this.startPlayPaddle.x - 25) {
+        // if (soundOn) {
+        this.scoreSnd.play();
+        // }
         enemyCurrentScore++;
         this.scene.restart();
         this.scene.pause();
@@ -127,6 +139,9 @@ class MyGame extends Phaser.Scene {
           this.scene.resume();
         }, 3000);
       } else if (this.ball.body.x > this.startEnemyPaddle.x - 25) {
+        // if (soundOn) {
+        this.scoreSnd.play();
+        // }
         playerCurrentScore++;
         this.scene.restart();
         this.scene.pause();
@@ -135,11 +150,25 @@ class MyGame extends Phaser.Scene {
         }, 3000);
       }
     };
+
+    this.gameOver = function () {
+      if (playerCurrentScore >= 10) {
+        //display winner scene
+        this.winSnd.play();
+        alert("YOU WIN!!!");
+        this.scene.pause();
+      } else if (enemyCurrentScore >= 10) {
+        this.loseSnd.play();
+        alert("YOU LOSE!!!");
+        this.scene.pause();
+      }
+    };
   }
 
   update() {
     this.rand = Math.floor(Math.random() * 180);
     this.ai();
+    this.gameOver();
 
     this.playerPaddle.setVelocity(0);
     if (this.keys.W.isDown) {
