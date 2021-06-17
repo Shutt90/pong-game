@@ -92,7 +92,13 @@ class MyGame extends Phaser.Scene {
     this.physics.add.collider(this.ball, this.playerPaddle, null, null, this);
     this.physics.add.collider(this.ball, this.enemyPaddle, null, null, this);
 
-    this.keys = this.input.keyboard.addKeys("W,S,A,D,I,J,L,K");
+    this.keys = this.input.keyboard.addKeys("W,S,I,J");
+
+    this.ai = function() {
+      if (this.ball.y === this.startPositionBall.y) {
+      this.physics.moveTo(this.enemyPaddle, 550, this.ball.y, 300)
+      };
+    };
 
     this.timer = function () {
       this.scene.resume();
@@ -133,6 +139,7 @@ class MyGame extends Phaser.Scene {
   update() {
     this.rand = Math.floor(Math.random() * 180);
     this.reset();
+    this.ai();
 
     this.playerPaddle.setVelocity(0);
     if (this.keys.W.isDown) {
@@ -141,12 +148,12 @@ class MyGame extends Phaser.Scene {
       this.playerPaddle.setVelocityY(400);
     }
 
-    this.enemyPaddle.setVelocity(0);
-    if (this.keys.I.isDown) {
-      this.enemyPaddle.setVelocityY(-400);
-    } else if (this.keys.K.isDown) {
-      this.enemyPaddle.setVelocityY(400);
-    }
+    // this.enemyPaddle.setVelocity(0);
+    // if (this.keys.I.isDown) {
+    //   this.enemyPaddle.setVelocityY(-400);
+    // } else if (this.keys.K.isDown) {
+    //   this.enemyPaddle.setVelocityY(400);
+    // }
   }
 }
 
