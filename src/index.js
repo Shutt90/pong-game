@@ -71,6 +71,9 @@ class MyGame extends Phaser.Scene {
       "paddle"
     );
 
+    console.log(this.startEnemyPaddle.x);
+    console.log(this.startEnemyPaddle.y);
+
     this.fontSize = 64;
 
     this.ball
@@ -94,10 +97,10 @@ class MyGame extends Phaser.Scene {
 
     this.keys = this.input.keyboard.addKeys("W,S,I,J");
 
-    this.ai = function() {
-      if (this.ball.y === this.startPositionBall.y) {
-      this.physics.moveTo(this.enemyPaddle, 550, this.ball.y, 300)
-      };
+    this.ai = function () {
+      if (this.ball.x > this.startPositionBall.y) {
+        this.physics.moveTo(this.enemyPaddle, 745, this.ball.y, 350);
+      }
     };
 
     this.timer = function () {
@@ -116,21 +119,19 @@ class MyGame extends Phaser.Scene {
     };
 
     this.reset = function () {
-      if (this.ball.body.x < this.playerPaddle.body.x - 25) {
+      if (this.ball.x < this.startPlayPaddle.x - 25) {
         enemyCurrentScore++;
         this.scene.restart();
-        this.resumeGame();
-
         this.scene.pause();
         setTimeout(() => {
-          this.scene.restart();
+          this.scene.resume();
         }, 3000);
-      } else if (this.ball.body.x > this.enemyPaddle.body.x + 25) {
+      } else if (this.ball.body.x > this.startEnemyPaddle.x - 25) {
         playerCurrentScore++;
         this.scene.restart();
         this.scene.pause();
         setTimeout(() => {
-          this.scene.restart();
+          this.scene.resume();
         }, 3000);
       }
     };
@@ -138,7 +139,6 @@ class MyGame extends Phaser.Scene {
 
   update() {
     this.rand = Math.floor(Math.random() * 180);
-    this.reset();
     this.ai();
 
     this.playerPaddle.setVelocity(0);
@@ -148,12 +148,7 @@ class MyGame extends Phaser.Scene {
       this.playerPaddle.setVelocityY(400);
     }
 
-    // this.enemyPaddle.setVelocity(0);
-    // if (this.keys.I.isDown) {
-    //   this.enemyPaddle.setVelocityY(-400);
-    // } else if (this.keys.K.isDown) {
-    //   this.enemyPaddle.setVelocityY(400);
-    // }
+    this.reset();
   }
 }
 
