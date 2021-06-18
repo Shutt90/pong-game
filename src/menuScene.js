@@ -22,7 +22,7 @@ class menuScene extends Phaser.Scene {
     this.fontSize = 30;
 
     this.animatedSpace = this.add
-      .sprite(this.center.y, this.center.x, "space")
+      .sprite(this.center.x, this.center.y + 100, "space")
       .play("spaceAnim")
       .setScale(2);
     this.insertMenuText();

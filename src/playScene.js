@@ -1,3 +1,5 @@
+import menuScene from "./menuScene";
+
 let playerCurrentScore = 0;
 let enemyCurrentScore = 0;
 
@@ -26,7 +28,7 @@ class playScene extends Phaser.Scene {
     this.sounds();
     this.func();
     this.fontSize = 64;
-    this.keys = this.input.keyboard.addKeys("W,S,I,J");
+    this.keys = this.input.keyboard.addKeys("W,S,ESC");
   }
 
   update() {
@@ -42,6 +44,7 @@ class playScene extends Phaser.Scene {
     }
 
     this.reset();
+    this.checkPause();
   }
 
   positions() {
@@ -170,6 +173,13 @@ class playScene extends Phaser.Scene {
           this.ball.y,
           350
         );
+      }
+    };
+
+    this.checkPause = function () {
+      if (this.keys.ESC.isDown) {
+        this.scene.pause();
+        this.scene.launch(menuScene);
       }
     };
 
