@@ -28,7 +28,7 @@ class playScene extends Phaser.Scene {
     this.sounds();
     this.func();
     this.fontSize = 64;
-    this.keys = this.input.keyboard.addKeys("W,S,ESC");
+    this.keys = this.input.keyboard.addKeys("W,S,R,ESC,SPACE");
   }
 
   update() {
@@ -45,6 +45,7 @@ class playScene extends Phaser.Scene {
 
     this.reset();
     this.checkPause();
+    this.unpause();
   }
 
   positions() {
@@ -147,21 +148,13 @@ class playScene extends Phaser.Scene {
         this.scoreSnd.play();
         // }
         enemyCurrentScore++;
-        this.scene.restart();
-        this.scene.pause();
-        setTimeout(() => {
-          this.scene.resume();
-        }, 3000);
+        this.timer();
       } else if (this.ball.body.x > this.startEnemyPaddle.x - 25) {
         // if (soundOn) {
         this.scoreSnd.play();
         // }
         playerCurrentScore++;
-        this.scene.restart();
-        this.scene.pause();
-        setTimeout(() => {
-          this.scene.resume();
-        }, 3000);
+        this.timer();
       }
     };
 
@@ -179,33 +172,46 @@ class playScene extends Phaser.Scene {
     this.checkPause = function () {
       if (this.keys.ESC.isDown) {
         this.scene.pause();
-        this.scene.launch(menuScene);
+        this.pauseText = this.add.text(
+          0,
+          0,
+          "PAUSED\nPress Space to Resume\nOr R to restart",
+          {
+            fontSize: "32px",
+            fill: "#fff",
+          }
+        );
+      }
+    };
+
+    //NOT CURRENTLY WORKING!
+    this.unpause = function () {
+      if (this.keys.SPACE.isDown) {
+        this.scene.resume();
+      } else if (this.keys.R.isDown) {
+        this.scene.restart();
+        setTimeout(() => {
+          this.scene.resume();
+        }, 1000);
       }
     };
 
     this.timer = function () {
-      this.scene.resume();
-    };
-    this.resumeGame = function () {
-      this.pauseText = this.add.text(
-        this.startPositionBall.x - this.fontSize / 2,
-        this.startPositionBall.y - this.fontSize / 2,
-        "NEW GAME",
-        {
-          fontSize: "64px",
-          fill: "#fff",
-        }
-      );
+      this.scene.restart();
+      setTimeout(() => {
+        this.scene.resume();
+      }, 1000);
     };
 
     this.gameOver = function () {
       if (playerCurrentScore >= 10) {
-        //display winner scene
+        //add winner animation - temporary alert
         this.winSnd.play();
         alert("YOU WIN!!!");
         this.scene.pause();
       } else if (enemyCurrentScore >= 10) {
         this.loseSnd.play();
+        //add loser animation - temporary alert
         alert("YOU LOSE!!!");
         this.scene.pause();
       }
