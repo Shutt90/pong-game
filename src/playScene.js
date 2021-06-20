@@ -1,4 +1,5 @@
 import menuScene from "./menuScene";
+import pauseScene from "./pauseScene"
 
 let playerCurrentScore = 0;
 let enemyCurrentScore = 0;
@@ -45,7 +46,6 @@ class playScene extends Phaser.Scene {
 
     this.reset();
     this.checkPause();
-    this.unpause();
   }
 
   positions() {
@@ -172,27 +172,7 @@ class playScene extends Phaser.Scene {
     this.checkPause = function () {
       if (this.keys.ESC.isDown) {
         this.scene.pause();
-        this.pauseText = this.add.text(
-          0,
-          0,
-          "PAUSED\nPress Space to Resume\nOr R to restart",
-          {
-            fontSize: "32px",
-            fill: "#fff",
-          }
-        );
-      }
-    };
-
-    //NOT CURRENTLY WORKING!
-    this.unpause = function () {
-      if (this.keys.SPACE.isDown) {
-        this.scene.resume();
-      } else if (this.keys.R.isDown) {
-        this.scene.restart();
-        setTimeout(() => {
-          this.scene.resume();
-        }, 1000);
+        this.scene.launch("pauseScene");
       }
     };
 
