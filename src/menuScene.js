@@ -6,9 +6,12 @@ class menuScene extends Phaser.Scene {
   preload() {
     this.load.image("space", "./src/assets/space.png");
     this.load.image("spacedown", "./src/assets/spacedown.png");
+    this.load.image("soundon", "./src/assets/soundon.png");
+    this.load.image("soundoff", "./src/assets/soundoff.png");
   }
   create() {
     this.scene.launch("playScene");
+    this.add.sprite(780, 20, "soundon");
     this.keys = this.input.keyboard.addKeys("SPACE");
 
     this.anims.create({
@@ -27,7 +30,6 @@ class menuScene extends Phaser.Scene {
       .setScale(2);
     this.insertMenuText();
 
-    // this.add.sprite(400, 300, "space").play("animSpace");
   }
   update() {
     this.checkPlay();
