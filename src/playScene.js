@@ -1,5 +1,5 @@
 import menuScene from "./menuScene";
-import pauseScene from "./pauseScene"
+import pauseScene from "./pauseScene";
 
 let playerCurrentScore = 0;
 let enemyCurrentScore = 0;

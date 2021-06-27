@@ -1,3 +1,4 @@
+
 class menuScene extends Phaser.Scene {
   constructor() {
     super({ key: "menuScene" });
@@ -10,12 +11,12 @@ class menuScene extends Phaser.Scene {
     this.load.image("soundoff", "./src/assets/soundoff.png");
   }
   create() {
-    // let soundImg = this.add.sprite(780, 20, "soundon");
+    this.soundImg = this.add.sprite(780, 20, "soundon");
     this.scene.launch("playScene");
     this.keys = this.input.keyboard.addKeys("SPACE");
-    // const soundOff = function () {
-    //   sound.mute = true;
-    // };
+    const soundOff = function () {
+      this.sound.mute = true;
+    };
     // soundImg.setInteractive();
     // soundImg.on("pointerdown", soundOff());
 
